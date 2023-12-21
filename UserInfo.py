@@ -1,3 +1,3 @@
-email = ""
+username = ""
 password = ""
 
