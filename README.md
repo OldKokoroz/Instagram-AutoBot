@@ -23,8 +23,9 @@ Choose the chrome version you are currently using
 
 3 --> Victims.py ( Enter victims usernames that program is gonna follow / send message / get followings)
 
-4 --> To get story views 
-        | Open new bot accounts ( Make them all have the same password)|
-        | Enter only the username of your main account under main_ |
-        | Enter Bot usernames under bot_usernames |
-        | Enter bot password under same_password |
+| To get story views                                           |
+| ------------------------------------------------------------ |
+| Open new bot accounts ( Make them all have the same password)|
+| Enter only the username of your main account under main_     |
+| Enter Bot usernames under bot_usernames                      |
+| Enter bot password under same_password                       |
