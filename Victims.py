@@ -1,0 +1,2 @@
+
+victim_list = ["mosalah"]
