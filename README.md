@@ -25,9 +25,9 @@ Choose the chrome version you are currently using
 
 4 : 
 
-| To get story views                                           |
-| ------------------------------------------------------------ |
-| 4.1 Open new bot accounts ( Make them all have the same password)|
-| 4.2 Enter only the username of your main account under main_     |
-| 4.3 Enter Bot usernames under bot_usernames                      |
-| 4.4 Enter bot password under same_password                       |
+| To get story views                                                 |
+| ------------------------------------------------------------------ |
+| 4.1   Open new bot accounts ( Make them all have the same password)|
+| 4.2   Enter only the username of your main account under main_     |
+| 4.3   Enter Bot usernames under bot_usernames                      |
+| 4.4   Enter bot password under same_password                       |
