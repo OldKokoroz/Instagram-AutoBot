@@ -1,167 +1,228 @@
-
 import sys
-import time
+from time import sleep
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 
-import UserstoFollow
-import message_to_stalked
-from UserInfo import email, password
+import Victims
+import BotAccounts
+import yourMessage
+from YourIG import username, password
 
 
 class InstaBot:
-    def __init__(self, email, password):
-        self.browse = webdriver.Chrome()
-        self.email = email
-        self.password = password
+    def __init__(self):
 
-    def login(self):
-        self.browse.get("https://www.instagram.com/")
-        time.sleep(2)
+        chrome_options = Options()
+        chrome_options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
+
+        self.browse = webdriver.Chrome(options=chrome_options)
+
+    def login(self, uname, pwd):
+        self.browse.get("https://www.instagram.com/login")
+        sleep(2)
      
-        emailInput = self.browse.find_element(By.NAME, "username")
+        nameInput = self.browse.find_element(By.NAME, "username")
         passwordInput = self.browse.find_element(By.NAME, "password")
     
-        emailInput.send_keys(self.email)
-        time.sleep(2)
-        passwordInput.send_keys(self.password)
-        time.sleep(2)
+        nameInput.send_keys(uname)
+        sleep(2)
+        passwordInput.send_keys(pwd)
+        sleep(2)
         passwordInput.send_keys(Keys.ENTER)
-        time.sleep(10)
+        sleep(10)
 
     def get_followings(self):
-        get_victim = "dann_k07"
+
+        for get_victim in Victims.victim_list:
         
-        self.browse.get(f"https://www.instagram.com/{get_victim}")
-        time.sleep(5)
-        
-        open_dialog = self.browse.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/div[2]/section/main/div/ul/li[3]/a")
-        time.sleep(3)        
-        open_dialog.click()
-        
-        dialogMenu = open_dialog.find_element(By.CSS_SELECTOR, "div[role=dialog] ul")
-        followingCount = len(dialogMenu.find_element(By.CSS_SELECTOR,"li"))
-            
-        action = webdriver.ActionChains(self.browse)
-        time.sleep(5)
+            self.browse.get(f"https://www.instagram.com/{get_victim}")
+            sleep(5)
 
-        while True:
-            dialogMenu.click()
-            action.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
-            
-            time.sleep(2)
+            open_dialog = self.browse.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/div[2]/section/main/div/ul/li[3]/a")
+            sleep(3)
+            open_dialog.click()
 
-            newCount = len(dialogMenu.find_element(By.CSS_SELECTOR, "li"))
+            dialogMenu = open_dialog.find_element(By.CSS_SELECTOR, "div[role=dialog] ul")
+            followingCount = len(dialogMenu.find_element(By.CSS_SELECTOR,"li"))
 
-            if followingCount != newCount:
-                followingCount = newCount
-                print(f"UpdatedCount : {followingCount}")
-                time.sleep(2)
-            else:
-                break
+            action = webdriver.ActionChains(self.browse)
+            sleep(5)
 
-    
-        followings = dialogMenu.find_elements(By.CSS_SELECTOR, "li")
-        followingsList = []
+            while True:
+                dialogMenu.click()
+                action.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
 
-        for user in followings:
-            user_link = user.find_elements(By.CSS_SELECTOR, "a").get_attribute("href")
-            followingsList.append(user_link)
+                sleep(2)
 
-        save_followings = 'C:/Users/abdul/Desktop/Selenium/followings'
+                newCount = len(dialogMenu.find_element(By.CSS_SELECTOR, "li"))
 
-        with open(save_followings, "w") as file:
-            for element in followingsList:
-                file.write(f"{element}\n")
+                if followingCount != newCount:
+                    followingCount = newCount
+                    print(f"UpdatedCount : {followingCount}")
+                    sleep(2)
+                else:
+                    break
+
+            followings = dialogMenu.find_elements(By.CSS_SELECTOR, "li")
+            followingsList = []
+
+            for user in followings:
+                user_link = user.find_elements(By.CSS_SELECTOR, "a").get_attribute("href")
+                followingsList.append(user_link)
+
+            save_followings = '.../followings'
+
+            with open(save_followings, "a") as file:
+                for element in followingsList:
+                    file.write(f"{element}\n")
 
     def follow_page(self):
-        to_follow = UserstoFollow.Follow_list
+        to_follow = Victims.victim_list
 
         for user_link in to_follow:
             self.browse.get(f"https://www.instagram.com/{user_link}")
-            time.sleep(5)
+            sleep(5)
             
             follow_button = self.browse.find_element(By.XPATH, '//button[@class=" _acan _acap _acas _aj1- _ap30"]')
-            time.sleep(5)
+            sleep(5)
             follow_button.click()
             
-            time.sleep(10)
+            sleep(10)
 
     def message_func(self):
-        to_message = UserstoFollow.Follow_list
+        my_message = yourMessage.msg_str
+        victims = Victims.victim_list
 
-        my_message = message_to_stalked.my_message_st
+        count = 0
 
-        self.browse.get(f"https://www.instagram.com/{to_message}")
-        time.sleep(5)
+        try:
+            for victim in victims:
+                self.browse.get('https://www.instagram.com/direct/new/')
+                sleep(5)
 
-        message_button_path = '/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/div[2]/section/main/div/header/section/div[1]/div[2]/div/div[2]/div'
-        message_button = self.browse.find_element(By.XPATH, message_button_path)
+                to_btn = self.browse.find_element(By.NAME, 'queryBox')
+                to_btn.send_keys(victim)
 
-        time.sleep(5)
-        message_button.click()
-        time.sleep(5)
-            
-        message_box_xpath = self.browse.find_element(By.XPATH, '//div[@role="textbox"]')
-        time.sleep(5)
-        
-        message_box_xpath.click()
-        time.sleep(5)
-       
-        message_box_xpath.send_keys(my_message)
-        time.sleep(5)
-            
-        message_box_xpath.send_keys(Keys.ENTER)
-        time.sleep(8)
+                sleep(8)
 
-        
-# Base
-Bot = InstaBot(email, password)
+                chk_mrk = self.browse.find_element(By.CLASS_NAME, 'dCJp8')
+                chk_mrk.click()
+
+                sleep(3)
+
+                nxt_btn = self.browse.find_element(By.XPATH, '//div[@class="mXkkY KDuQp"]')
+                nxt_btn.click()
+
+                sleep(6)
+
+                txt_box = self.browse.find_element(By.TAG_NAME, 'textarea')
+                txt_box.send_keys(f"{my_message}")
+
+                sleep(2)
+
+                snd_btn = self.browse.find_element(By.CSS_SELECTOR, '.sqdOP.yWX7d.y3zKF')
+                snd_btnn = snd_btn[len(snd_btn)-1]
+                snd_btnn.click()
+
+                sleep(4)
+                count += 1
+
+            print(f"\nSent : {count} \n")
+
+        except TypeError:
+            print('Failed!')
+
+    def view_story(self):
+        main_acc = BotAccounts.main_
+
+        bot_accs = BotAccounts.bot_usernames
+        password = BotAccounts.same_password
+
+        for bots in bot_accs:
+            self.browse.get('https://www.instagram.com/accounts/login/')
+
+            sleep(2)
+
+            name_plc = self.browse.find_element(By.Name, 'username')
+            passwd_plc = self.browse.find_element(By.Name, 'password')
+
+            name_plc.send_keys(bots)
+            passwd_plc.send_keys(password + Keys.ENTER)
+
+            sleep(10)
+
+            for _ in main_acc:
+                self.browse.get(f'https://www.instagram.com/{_}')
+
+                sleep(5)
+
+                view_button = self.browse.find_element(By.CLASS_NAME, '_2dbep')
+
+                view_button.click()
+
+                sleep(15)
+
+            self.browse.delete_all_cookies()
+
+        self.browse.quit()
 
 
 # Run by Choice
-
-start = input("""Modes : 
-
-1 -- Follow a List of Users     2 -- Message a List of Users
-                  
-3 -- Get Followings List        4 -- Exit
-
-Choice : """)
-time.sleep(2)
+start = input('''    |
+|-PRESS-------------------|
+| 1 - Get who They Follow |
+| 2 - Mass Followings     |
+| 3 - Send Mass Messages  |
+| 4 - Gain Story Views    |
+| 5 - Exit                |
+|-------------------------|
+|-> ''')
+sleep(2)
 
 try:
     if start == "1":
-        time.sleep(0.5)
+        sleep(1)
+        InstaBot.login(username, password)
+        sleep(5)
+        InstaBot.get_followings()
         print("\nBot Started")
-        Bot.login()
-        time.sleep(5)
-        Bot.follow_page()
+        sleep(5)
         
     elif start == "2":
-        time.sleep(0.5)
+        sleep(1)
+        InstaBot.login(username, password)
+        sleep(5)
+        InstaBot.follow_page()
+        sleep(1)
         print("\nBot Started")
-        Bot.login()
-        time.sleep(5)
-        Bot.message_func() 
-        # Message function is for visible accounts or the accounts you follow
+        sleep(5)
 
     elif start == "3":
-        time.sleep(0.5)
+        sleep(1)
+        InstaBot.login(username, password)
+        sleep(1)
+        InstaBot.message_func()
+        sleep(1)
         print("\nBot Started")
-        Bot.login()
-        time.sleep(5)
-        Bot.get_followings()
+        sleep(5)
 
     elif start == "4":
-        time.sleep(1)
+        sleep(1)
+        InstaBot.view_story()
+        sleep(1)
+        print("\nBot Started")
+        sleep(5)
+
+    elif start == "5":
+        sleep(1)
         print("\nAlright!!!")
         sys.exit(0)
 
     else:
-        time.sleep(1)
+        sleep(1)
         print("\nInvalid Input!")
         sys.exit(0)
         
