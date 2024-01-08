@@ -14,22 +14,21 @@ from YourIG import username, password
 
 class InstaBot:
     def __init__(self):
-
         chrome_options = Options()
         chrome_options.add_argument('--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1')
 
         self.browse = webdriver.Chrome(options=chrome_options)
 
-    def login(self, uname, pwd):
+    def login(self):
         self.browse.get("https://www.instagram.com/login")
         sleep(2)
      
         nameInput = self.browse.find_element(By.NAME, "username")
         passwordInput = self.browse.find_element(By.NAME, "password")
     
-        nameInput.send_keys(uname)
+        nameInput.send_keys(username)
         sleep(2)
-        passwordInput.send_keys(pwd)
+        passwordInput.send_keys(password)
         sleep(2)
         passwordInput.send_keys(Keys.ENTER)
         sleep(10)
@@ -169,16 +168,20 @@ class InstaBot:
 
         self.browse.quit()
 
-    def start_base(self):
-        sleep(2)
-        InstaBot.login(username, password)
-        sleep(5)
-        print("\nBot Started")
-        sleep(2)
-    
-    
+
+i = InstaBot()
+
+
+def start_base():
+    sleep(2)
+    i.login()
+    sleep(5)
+    print("\nBot Started")
+    sleep(2)
+
+
 # Run by Choice
-start = input('''    |
+start = input('''
 |-PRESS-------------------|
 | 1 - Get who They Follow |
 | 2 - Mass Followings     |
@@ -188,24 +191,24 @@ start = input('''    |
 |-------------------------|
 |-> ''')
 sleep(2)
-    
-    
+
+
 try:
     if start == "1":
-        InstaBot.start_base()
-        InstaBot.get_followings()
-        
+        start_base()
+        i.get_followings()
+
     elif start == "2":
-        InstaBot.start_base()
-        InstaBot.follow_page()
+        start_base()
+        i.follow_page()
 
     elif start == "3":
-        InstaBot.start_base()
-        InstaBot.message_func()
+        start_base()
+        i.message_func()
 
     elif start == "4":
-        InstaBot.start_base()
-        InstaBot.view_story()
+        start_base()
+        i.view_story()
 
     elif start == "5":
         sleep(2)
