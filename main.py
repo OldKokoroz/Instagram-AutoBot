@@ -169,7 +169,14 @@ class InstaBot:
 
         self.browse.quit()
 
-
+    def start_base(self):
+        sleep(2)
+        InstaBot.login(username, password)
+        sleep(5)
+        print("\nBot Started")
+        sleep(2)
+    
+    
 # Run by Choice
 start = input('''    |
 |-PRESS-------------------|
@@ -181,43 +188,27 @@ start = input('''    |
 |-------------------------|
 |-> ''')
 sleep(2)
-
+    
+    
 try:
     if start == "1":
-        sleep(1)
-        InstaBot.login(username, password)
-        sleep(5)
+        InstaBot.start_base()
         InstaBot.get_followings()
-        print("\nBot Started")
-        sleep(5)
         
     elif start == "2":
-        sleep(1)
-        InstaBot.login(username, password)
-        sleep(5)
+        InstaBot.start_base()
         InstaBot.follow_page()
-        sleep(1)
-        print("\nBot Started")
-        sleep(5)
 
     elif start == "3":
-        sleep(1)
-        InstaBot.login(username, password)
-        sleep(1)
+        InstaBot.start_base()
         InstaBot.message_func()
-        sleep(1)
-        print("\nBot Started")
-        sleep(5)
 
     elif start == "4":
-        sleep(1)
+        InstaBot.start_base()
         InstaBot.view_story()
-        sleep(1)
-        print("\nBot Started")
-        sleep(5)
 
     elif start == "5":
-        sleep(1)
+        sleep(2)
         print("\nAlright!!!")
         sys.exit(0)
 
